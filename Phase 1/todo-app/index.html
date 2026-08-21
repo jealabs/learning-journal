@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>J-Todo - JeaLabs</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-[#FFFFF0]">
+    <header class="bg-[#8C7A6B] p-5 text-2xl font-bold text-center">
+      <h1>J-Todo</h1>
+    </header>
+
+    <main class="max-w-2xl mx-auto my-42 p-5 border rounded-lg">
+
+      <section class="text-2xl font-bold mx-auto py-4 flex justify-center">
+        <h1>Just Doing Great Step by Step</h1>
+      </section>
+
+      <!-- TODO CREATION -->
+      <form 
+        id="todo-form" 
+        class="flex flex-col md:flex-row gap-4 pb-4"
+      >
+      
+        <input
+          id="todo-input"
+          class="flex-1 outline rounded-lg p-3 bg-[#FFFFF0]"
+          type="text"
+          placeholder="Add a new todo"
+        />
+        <button 
+        id="todo-button-add" 
+        class="bg-[#8C7A6B] text-[#FFFFF0] p-2 md:px-5 rounded-lg cursor-pointer" 
+        type="submit">Add</button>
+      </form>
+
+      <!-- FILTER  -->
+      <section class="flex justify-evenly text-black mt-2">  
+        <button class="border rounded-lg px-4 py-1 bg-[#8C7A6B] text-[#FFFFF0]" id="all">All</button>
+        <button class="border rounded-lg px-4 py-1 bg-[#8C7A6B] text-[#FFFFF0]" id="active">Active</button>
+        <button class="border rounded-lg px-4 py-1 bg-[#8C7A6B] text-[#FFFFF0]" id="completed">Completed</button>
+      </section>
+
+      <hr class="my-8">
+      
+      <!-- TODO LIST -->
+      <ul id="todo-list">
+        <!-- <li class="flex items-center">
+          <input class="w-4 h-4" type="checkbox">
+          <p class="px-3">Belajar membuat aplikasi frontend menggunakan Tailwind CSS dan memahami bagaimana responsive layout bekerja</p>
+          <button class="cursor-pointer ml-auto hover:text-[#FF0000]">Delete</button>
+        </li> -->
+      </ul>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
