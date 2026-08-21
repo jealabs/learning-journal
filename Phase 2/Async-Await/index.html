@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Async Await</title>
+  </head>
+  <body>
+    <h1>Asycn Await</h1>
+    <span id="name"></span>
+    <span id="title"></span>
+    <span id="err"></span>
+
+    <script>
+      const name = document.getElementById("name");
+      const title = document.getElementById("title");
+      const err = document.getElementById("err");
+
+      const getData = async () => {
+        try {
+          const [result1, result2] = await Promise.all([
+            fetch("https://jsonplaceholder.typicode.com/users/1"),
+            fetch("https://jsonplaceholder.typicode.com/posts/1"),
+          ]);
+
+          const [data1, data2] = await Promise.all([result1.json(), result2.json()])
+
+          name.textContent = data1.name + ' | '
+          title.textContent = data2.title;
+        } catch (error) {
+          err.textContent = "Error API...";
+        }
+      };
+      getData();
+    </script>
+  </body>
+</html>

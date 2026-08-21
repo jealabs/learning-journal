@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Destructuring</title>
+  </head>
+  <body>
+    <h1>Intro Myself</h1>
+    <span id="intro"></span>
+    <span id="intro2"></span>
+
+    <script>
+      // 1# Object--------------------------------------------------------------------------------------------
+
+      // const user = {
+      //   name: "Jerome",
+      //   age: 20,
+      //   location: "Banda Aceh",
+      //   role: "developer",
+      // };
+      // const name = document.getElementById("name");
+      // const role = document.getElementById("role");
+      // name.textContent = user.name + " — ";
+      // role.textContent = user.role;
+
+      // #2 Destructuring Object-------------------------------------------------------------------------------
+
+      // const intro = document.getElementById("intro");
+      // const user = {
+      //   name: "Jerome",
+      //   age: 20,
+      //   location: "Banda Aceh",
+      //   role: "developer",
+      // };
+      // const { name, role } = user;
+      // intro.textContent = name + " — " + role;
+
+      // #3 Destructuring Object With Rename--------------------------------------------------------------------
+
+      // const intro = document.getElementById("intro");
+      // const intro2 = document.getElementById("intro2");
+      // const user = {
+      //   name: "Jerome",
+      //   age: 20,
+      //   location: "Banda Aceh",
+      //   role: "Developer",
+      // };
+
+      // const response = {
+      //   name: "Jerome Jee",
+      //   age: 20,
+      //   location: "Banda Aceh",
+      //   role: "Founder",
+      // };
+
+      // const {name, role} = user
+      // const {name : resName, role : resRole} = response
+      // intro.textContent = name + ' - ' + role
+      // intro2.textContent = resName + ' - ' + resRole
+
+      // #4 Destructure Array ------------------------------------------------------------------------------------
+
+      // const locate = document.getElementById("locate");
+      // const coordinates = [5.5483, 95.3238];
+      // const [lat, lng] = coordinates
+      // locate.textContent = "Lat: " + lat + " | " + "Lng: " + lng
+
+      // #5 Spread Operator ------------------------------------------------------------------------------------------
+
+      // const intro = document.getElementById("intro");
+      // const user = {
+      //   name: "Jerome",
+      //   age: 20,
+      //   role: "developer",
+      // };
+
+      // const updates = {
+      //   role: "founder",
+      //   locate: "Banda Aceh",
+      // };
+
+      // const updatedUser = { ...user, ...updates };
+
+      // const { name, role, locate } = updatedUser;
+
+      // intro.textContent = name + " — " + role + " — " + locate;
+
+      // #6 Destructure Array + Spread Operator ------------------------------------------------------------------------
+
+      // const numbers = [10, 20, 30, 40, 50];
+      // const [first, ...rest] = numbers
+      // number.textContent = first + " & " + rest
+    </script>
+  </body>
+</html>
