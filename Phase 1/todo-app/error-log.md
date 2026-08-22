@@ -1,143 +1,167 @@
-# Error Log — Phase 1, Week 1
+# Errors I Found In Phase 1
+
+## Error 1
+
+### Error: Using `#` prefix inside `getElementById`
+
+### Context:
+
+    document.getElementById("#todo-form");
+
+### Why: `getElementById` does not accept CSS selector syntax — passing `#` returns `null`, crashing everything that follows
+
+### Solution: Remove the `#` prefix
+
+    document.getElementById("todo-form");
 
 ---
 
-## Sesi 1: To-Do App (Add, Delete, Toggle, localStorage)
+## Error 2
 
-### Error 1 — `getElementById` pakai `#`
-**Kode salah:**
-```js
-document.getElementById("#todo-form");
-```
-**Masalah:** `getElementById` tidak pakai prefix `#`. Hasilnya `null`, dan semua operasi di atasnya crash.
-**Solusi:**
-```js
-document.getElementById("todo-form");
-```
-**Pelajaran:** `#` hanya untuk `querySelector`. `getElementById` langsung nama id-nya.
+### Error: Loading `<script>` in `<head>` before the DOM is ready
 
----
+### Context:
 
-### Error 2 — Script di `<head>` sebelum HTML selesai dibaca
-**Kode salah:**
-```html
-<head>
-  <script src="app.js"></script>
-</head>
-```
-**Masalah:** JS jalan sebelum browser baca `<body>`, jadi semua `getElementById` return `null`. Error: `Cannot read properties of null (reading 'addEventListener')`.
-**Solusi:** Pindah `<script>` ke paling bawah, tepat sebelum `</body>`.
-**Pelajaran:** JS harus jalan setelah elemen HTML yang dirujuknya ada di DOM.
+    <head>
+      <script src="app.js"></script>
+    </head>
+
+### Why: JS runs before the browser parses `<body>`, so every `getElementById` returns `null` — throws `Cannot read properties of null (reading 'addEventListener')`
+
+### Solution: Move `<script>` to the bottom, just before `</body>`
 
 ---
 
-### Error 3 — `addEventListener` di dalam `render()`
-**Kode salah:**
-```js
-function render() {
-  todoForm.addEventListener("submit", function() { ... });
-}
-```
-**Masalah:** Setiap kali `render()` dipanggil, event listener baru didaftarkan ke elemen yang sama. Makin banyak todo, makin numpuk listener-nya.
-**Solusi:** Taruh event listener di luar `render()`, di level atas file.
-**Pelajaran:** `render()` tugasnya hanya gambar ulang UI — bukan setup event.
+## Error 3
+
+### Error: Registering `addEventListener` inside `render()`
+
+### Context:
+
+    function render() {
+      todoForm.addEventListener("submit", function() { ... });
+    }
+
+### Why: Every `render()` call stacks a new listener on the same element — behavior multiplies with each re-render
+
+### Solution: Move event listeners outside `render()`, to the top level of the file
 
 ---
 
-### Error 4 — Nama variable konflik di dalam `forEach`
-**Kode salah:**
-```js
-todos.forEach(function(todo) {
-  let todo = document.createElement("li"); // konflik
-});
-```
-**Masalah:** Parameter `todo` dari forEach dan `let todo` di dalam block punya nama sama — JS bingung, error deklarasi duplikat.
-**Solusi:** Ganti nama variable elemen DOM jadi berbeda, misalnya `li`.
-**Pelajaran:** Nama variable harus unik dalam satu scope.
+## Error 4
+
+### Error: Variable name collision inside `forEach`
+
+### Context:
+
+    todos.forEach(function(todo) {
+      let todo = document.createElement("li");
+    });
+
+### Why: The callback parameter and the inner `let` share the same name — JS throws a duplicate declaration error
+
+### Solution: Rename the inner variable to something distinct like `li`
 
 ---
 
-### Error 5 — `filter` hasilnya tidak di-assign
-**Kode salah:**
-```js
-todos.filter((t) => t.id !== todo.id);
-```
-**Masalah:** `filter` return array baru tapi tidak disimpan ke mana-mana — array `todos` tidak berubah, item tidak terhapus.
-**Solusi:**
-```js
-todos = todos.filter((t) => t.id !== todo.id);
-```
-**Pelajaran:** `filter` tidak mengubah array asli — hasilnya harus di-assign balik.
+## Error 5
+
+### Error: Not assigning the result of `filter` back to the array
+
+### Context:
+
+    todos.filter((t) => t.id !== todo.id);
+
+### Why: `filter` returns a new array — the original `todos` stays unchanged and nothing gets deleted
+
+### Solution: Assign the result back
+
+    todos = todos.filter((t) => t.id !== todo.id);
 
 ---
 
-### Error 6 — Assignment bukan comparison di filter
-**Kode salah:**
-```js
-return (todo.completed = false);
-```
-**Masalah:** `=` adalah assignment, bukan comparison. Ini merusak data `todo.completed` di array setiap kali filter dijalankan.
-**Solusi:**
-```js
-return todo.completed === false;
-```
-**Pelajaran:** Di dalam kondisi `filter`, selalu pakai `===` bukan `=`.
+## Error 6
+
+### Error: Using `=` (assignment) instead of `===` (comparison) inside `filter`
+
+### Context:
+
+    return (todo.completed = false);
+
+### Why: `=` assigns `false` to `todo.completed` on every filter run — silently corrupts data in the array
+
+### Solution: Use strict equality
+
+    return todo.completed === false;
 
 ---
 
-### Error 7 — `checkbox.checked` tidak di-sync saat render
-**Masalah:** Setelah toggle dan `render()` dipanggil, checkbox baru di-generate dari nol tanpa tau state `completed`-nya — muncul selalu unchecked.
-**Solusi:** Tambah baris ini saat membuat checkbox di dalam `render()`:
-```js
-checkbox.checked = todo.completed;
-```
-**Pelajaran:** Setiap elemen yang di-generate ulang harus di-sync ke state array, bukan ke DOM lama.
+## Error 7
+
+### Error: Not syncing checkbox state when re-rendering
+
+### Context:
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    // missing: checkbox.checked = todo.completed
+
+### Why: Every `render()` creates a fresh checkbox with no knowledge of the existing state — always appears unchecked
+
+### Solution: Set `checked` from the source of truth
+
+    checkbox.checked = todo.completed;
 
 ---
 
-## Sesi 2: Fetch API
+## Error 8
 
-### Error 8 — `await` di luar `async function`
-**Kode salah:**
-```js
-const data = fetch("...");
-return await data;
-```
-**Masalah:** `await` hanya valid di dalam `async function`. `return` di level script juga tidak valid.
-**Solusi:**
-```js
-async function getData() {
-  const response = await fetch("...");
-  const data = await response.json();
-}
-getData();
-```
-**Pelajaran:** Setiap kali pakai `await`, function pembungkusnya harus `async`.
+### Error: Using `await` outside an `async` function
 
----
+### Context:
 
-### Error 9 — `li.push()` di elemen DOM
-**Kode salah:**
-```js
-li.push({ title: todo.title });
-```
-**Masalah:** `push` adalah method array — elemen DOM tidak punya method itu.
-**Solusi:**
-```js
-li.textContent = todo.title;
-```
-**Pelajaran:** Untuk nampilin teks ke elemen DOM, pakai `textContent` atau `innerHTML`.
+    const data = fetch("...");
+    return await data;
+
+### Why: `await` is only valid inside an `async` function — and `return` at script level is also invalid
+
+### Solution: Wrap inside an `async` function
+
+    async function getData() {
+      const response = await fetch("...");
+      const data = await response.json();
+    }
+    getData();
 
 ---
 
-### Error 10 — `response` di-declare di dalam `try`, dipakai di luar
-**Kode salah:**
-```js
-try {
-  const response = await fetch("...");
-}
-const data = await response.json(); // response tidak dikenal di sini
-```
-**Masalah:** Variable yang di-declare dengan `const`/`let` di dalam block `{}` tidak bisa diakses di luar block itu (block scope).
-**Solusi:** Semua logic yang butuh `response` harus ada di dalam `try`.
-**Pelajaran:** Perhatikan scope — variable hanya hidup di dalam block tempat dia di-declare.
+## Error 9
+
+### Error: Calling `.push()` on a DOM element
+
+### Context:
+
+    li.push({ title: todo.title });
+
+### Why: `.push()` is an Array method — DOM elements don't have it
+
+### Solution: Use `textContent` to set text on the element
+
+    li.textContent = todo.title;
+
+---
+
+## Error 10
+
+### Error: Accessing a `const`/`let` variable outside the block it was declared in
+
+### Context:
+
+    try {
+      const response = await fetch("...");
+    }
+    const data = await response.json(); // response is not defined here
+
+### Why: Block-scoped variables (`const`/`let`) only exist inside the `{}` they were declared in
+
+### Solution: Keep all logic that depends on `response` inside the same `try` block
